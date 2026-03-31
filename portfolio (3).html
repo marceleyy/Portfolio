@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marcel Sanda MOMPOLE | Cybersécurité & Réseaux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ══════════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════════ */
+:root {
+  --accent:   #00c97a;
+  --accent2:  #0090ff;
+  --accent3:  #ff4d6d;
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Space Grotesk', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+  --glow:  0 0 24px rgba(0,201,122,0.25);
+  --glow2: 0 0 24px rgba(0,144,255,0.25);
+  --ease: cubic-bezier(.16,1,.3,1);
+  --radius: 12px;
+  --radius-lg: 18px;
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"] {
+  --bg:        #07111a;
+  --surface:   #0d1722;
+  --surface2:  #12202d;
+  --surface3:  #162838;
+  --border:    rgba(122,182,255,0.13);
+  --text:      #eaf4ff;
+  --text-muted:#9cb5cf;
+  --text-faint:#627a92;
+  --navbar-bg: rgba(7,17,26,0.84);
+  --canvas-opacity: 0.38;
+  --shadow:    0 20px 60px rgba(0,0,0,0.32);
+  --grid-color:rgba(122,182,255,0.07);
+  --bg-gradient: radial-gradient(ellipse at 85% 5%, rgba(0,201,122,0.08) 0%, transparent 30%),
+                 radial-gradient(ellipse at 10% 55%, rgba(0,144,255,0.06) 0%, transparent 28%),
+                 linear-gradient(180deg, #07111a 0%, #050b11 100%);
+}
+
+/* ── LIGHT THEME — inspiré style Space Grotesk/référence ── */
+[data-theme="light"] {
+  --bg:        #f4f8fc;
+  --surface:   #ffffff;
+  --surface2:  #eef4fa;
+  --surface3:  #e5eef8;
+  --border:    rgba(10,44,78,0.09);
+  --text:      #0f2236;
+  --text-muted:#4f6a84;
+  --text-faint:#7f94aa;
+  --navbar-bg: color-mix(in srgb, #f4f8fc 78%, transparent);
+  --canvas-opacity: 0.07;
+  --shadow:    0 12px 40px rgba(10,35,66,0.08);
+  --grid-color:rgba(0,109,232,0.07);
+  --bg-gradient:
+    radial-gradient(ellipse at 85% 5%, rgba(0,144,255,0.09) 0%, transparent 30%),
+    radial-gradient(ellipse at 10% 60%, rgba(0,201,122,0.06) 0%, transparent 28%),
+    linear-gradient(180deg, #f4f8fc 0%, #e8f0f8 100%);
+  --glow:  0 0 24px rgba(0,109,232,0.12);
+  --glow2: 0 0 24px rgba(0,201,122,0.12);
+}
+[data-theme="light"] .accent-text { color: #006de8; }
+
+/* ── BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+::selection { background: var(--accent); color: #fff; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-gradient);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: none;
+  transition: color 0.4s;
+}
+
+/* Background CSS grid (mode clair surtout) */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+  pointer-events: none; z-index: 0;
+  transition: opacity 0.4s;
+}
+
+/* ── CURSOR ── */
+#cursor {
+  width: 11px; height: 11px; background: var(--accent);
+  border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999;
+  transition: transform 0.1s; box-shadow: var(--glow);
+}
+#cursor-ring {
+  width: 34px; height: 34px; border: 1.5px solid rgba(0,201,122,0.5);
+  border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998;
+  transition: all 0.14s ease;
+}
+body:has(a:hover) #cursor      { transform: scale(2.2); }
+body:has(a:hover) #cursor-ring { transform: scale(1.5); opacity: 0; }
+
+/* ── CANVAS ── */
+#bg-canvas {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none; opacity: var(--canvas-opacity);
+  transition: opacity 0.5s;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed; top: 0; width: 100%; height: 68px;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 36px;
+  background: var(--navbar-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000; transition: background 0.4s, border-color 0.4s;
+}
+.logo {
+  font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.05em; text-shadow: var(--glow);
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-mark {
+  width: 38px; height: 38px; border-radius: 11px;
+  border: 1px solid var(--border);
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, rgba(0,201,122,0.15), rgba(0,144,255,0.12));
+  box-shadow: var(--glow); font-size: 1rem; color: var(--accent);
+}
+.logo span { color: var(--text-faint); }
+.nav-links { display: flex; list-style: none; gap: 2px; }
+.nav-links a {
+  text-decoration: none; color: var(--text-muted);
+  font-family: var(--font-mono); font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 7px 11px; border-radius: 999px;
+  transition: all 0.18s var(--ease); border: 1px solid transparent;
+}
+.nav-links a:hover, .nav-links a.active-nav {
+  color: var(--accent); border-color: rgba(0,201,122,0.28);
+  background: rgba(0,201,122,0.07);
+}
+.nav-right { display: flex; align-items: center; gap: 10px; }
+
+/* ── THEME TOGGLE ── */
+.theme-btn {
+  width: 38px; height: 38px; border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-muted);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 0.88rem; transition: all 0.22s;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
+[data-theme="light"] .icon-moon { display: none; }
+[data-theme="dark"]  .icon-sun  { display: none; }
+
+.btn-cv {
+  font-family: var(--font-mono); font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  background: linear-gradient(135deg, var(--accent), #00a86b);
+  color: #fff; border: none;
+  padding: 9px 18px; border-radius: 999px; text-decoration: none;
+  transition: all 0.22s; box-shadow: var(--glow); display: flex; align-items: center; gap: 6px;
+}
+.btn-cv:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(0,201,122,0.38); }
+
+/* ── LAYOUT ── */
+.container {
+  max-width: 1140px; margin: 0 auto;
+  padding: 90px 32px 60px; position: relative; z-index: 1;
+}
+.section { display: none; animation: fadeInUp 0.42s var(--ease) both; }
+.section.active { display: block; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase;
+  letter-spacing: 0.22em; color: var(--accent); margin-bottom: 36px;
+  display: flex; align-items: center; gap: 14px;
+}
+.section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+.section-title h2 { font-size: inherit; font-weight: 700; white-space: nowrap; }
+
+/* ── HERO ── */
+.hero { padding: 52px 0 32px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(0,201,122,0.06);
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent);
+  letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 22px;
+  opacity: 0; animation: fadeInUp 0.5s 0.1s var(--ease) both;
+}
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); box-shadow: var(--glow); animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  font-weight: 800; line-height: 0.95; letter-spacing: -0.03em;
+  margin-bottom: 16px; opacity: 0; animation: fadeInUp 0.5s 0.18s var(--ease) both;
+}
+.hero h1 .highlight {
+  color: transparent; -webkit-text-stroke: 1.5px var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; background-clip: text;
+}
+[data-theme="light"] .hero h1 .highlight {
+  -webkit-text-stroke: 1.5px #006de8;
+}
+.hero-sub {
+  font-family: var(--font-body); font-size: 1rem; color: var(--text-muted);
+  margin-bottom: 36px; opacity: 0; animation: fadeInUp 0.5s 0.26s var(--ease) both;
+  max-width: 54ch;
+}
+.hero-sub strong { color: var(--text); }
+.hero-sub span { color: var(--accent2); font-weight: 600; }
+
+/* Stat row */
+.stat-row {
+  display: flex; gap: 0; margin: 36px 0;
+  opacity: 0; animation: fadeInUp 0.5s 0.34s var(--ease) both;
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: var(--surface); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.stat {
+  flex: 1; padding: 20px 24px; text-align: center;
+  border-right: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.stat:last-child { border-right: none; }
+.stat:hover { background: var(--surface2); }
+.stat-num {
+  font-family: var(--font-display); font-size: 2.1rem; font-weight: 800;
+  color: var(--accent); line-height: 1;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.stat-label {
+  font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--text-muted); margin-top: 5px;
+}
+
+/* Hero cards */
+.hero-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 32px;
+  opacity: 0; animation: fadeInUp 0.5s 0.42s var(--ease) both;
+}
+.hero-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 24px; position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow);
+}
+.hero-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  opacity: 0; transition: opacity 0.3s;
+}
+.hero-card:hover {
+  border-color: rgba(0,201,122,0.3); transform: translateY(-3px);
+  box-shadow: var(--shadow), var(--glow);
+}
+.hero-card:hover::before { opacity: 1; }
+.hero-card-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(0,201,122,0.12), rgba(0,144,255,0.08));
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--accent); margin-bottom: 14px;
+}
+.hero-card h3 {
+  font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 8px;
+}
+.hero-card p { font-size: 0.87rem; line-height: 1.65; color: var(--text); }
+.hero-card strong { color: var(--accent); font-weight: 600; }
+
+/* Tags */
+.tags {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  opacity: 0; animation: fadeInUp 0.5s 0.5s var(--ease) both;
+}
+.tags span {
+  font-family: var(--font-mono); font-size: 0.64rem;
+  padding: 5px 12px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-muted);
+  background: rgba(255,255,255,0.02);
+  letter-spacing: 0.05em; transition: all 0.18s; cursor: default;
+}
+[data-theme="light"] .tags span { background: rgba(0,0,0,0.02); }
+.tags span:hover {
+  border-color: var(--accent); color: var(--accent); background: rgba(0,201,122,0.07);
+}
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 0;
+  width: 1px; background: linear-gradient(180deg, var(--accent), transparent);
+}
+.timeline-item {
+  position: relative; margin-bottom: 28px;
+  opacity: 0; transform: translateX(-14px); transition: all 0.45s var(--ease);
+}
+.timeline-item.visible { opacity: 1; transform: translateX(0); }
+.timeline-item::before {
+  content: ''; position: absolute; left: -28px; top: 7px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent); box-shadow: var(--glow); border: 2px solid var(--bg);
+}
+[data-theme="light"] .timeline-item::before { border-color: var(--bg); }
+.timeline-item h3 { font-size: 0.96rem; font-weight: 700; margin-bottom: 4px; }
+.timeline-date {
+  font-family: var(--font-mono); font-size: 0.67rem; color: var(--accent);
+  letter-spacing: 0.1em; margin-bottom: 5px;
+}
+.timeline-item p { font-size: 0.84rem; color: var(--text-muted); line-height: 1.6; }
+
+/* ── EXP CARDS ── */
+.exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.exp-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 24px;
+  transition: all 0.28s var(--ease); box-shadow: var(--shadow);
+  opacity: 0; transform: translateY(14px);
+}
+.exp-card.visible { opacity: 1; transform: translateY(0); }
+.exp-card:hover { border-color: rgba(0,144,255,0.35); box-shadow: var(--shadow), var(--glow2); }
+.exp-badge {
+  display: inline-block; font-family: var(--font-mono); font-size: 0.6rem;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+  padding: 3px 9px; border-radius: 999px;
+  background: rgba(0,144,255,0.09); color: var(--accent2);
+  border: 1px solid rgba(0,144,255,0.2); margin-bottom: 10px;
+}
+.exp-card h4 { font-size: 0.96rem; font-weight: 700; margin-bottom: 3px; }
+.exp-date {
+  font-family: var(--font-mono); font-size: 0.64rem;
+  color: var(--text-faint); margin-bottom: 12px;
+}
+.exp-card ul { padding-left: 16px; }
+.exp-card li {
+  font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 3px;
+}
+.exp-card li strong { color: var(--accent); font-weight: 600; }
+
+/* ── SKILLS ── */
+.skills-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+.skill-cat {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow);
+  opacity: 0; transform: translateY(14px); transition: all 0.4s var(--ease);
+}
+.skill-cat.visible { opacity: 1; transform: translateY(0); }
+.skill-cat:hover { border-color: rgba(0,201,122,0.22); }
+.skill-icon {
+  width: 42px; height: 42px; border-radius: 11px;
+  background: linear-gradient(135deg, rgba(0,201,122,0.1), rgba(0,144,255,0.08));
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--accent); margin-bottom: 14px;
+}
+.skill-cat h4 {
+  font-size: 0.82rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; margin-bottom: 13px; color: var(--text);
+}
+.skill-tag-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+.skill-tag {
+  font-family: var(--font-mono); font-size: 0.62rem; padding: 3px 9px;
+  border-radius: 999px; background: var(--surface2);
+  border: 1px solid var(--border); color: var(--text-muted); transition: all 0.18s;
+}
+.skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ══ RÉALISATIONS ══ */
+.real-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); margin-bottom: 12px; overflow: hidden;
+  box-shadow: var(--shadow);
+  opacity: 0; transform: translateY(14px); transition: opacity 0.4s, transform 0.4s, border-color 0.3s;
+}
+.real-card.visible { opacity: 1; transform: translateY(0); }
+.real-card.open { border-color: rgba(0,201,122,0.35); }
+.real-header {
+  padding: 22px 26px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;
+  transition: background 0.18s; user-select: none;
+}
+.real-header:hover { background: rgba(0,201,122,0.025); }
+.real-header-left { flex: 1; }
+.real-num {
+  font-family: var(--font-mono); font-size: 0.58rem; color: var(--accent);
+  letter-spacing: 0.18em; margin-bottom: 5px; text-transform: uppercase;
+}
+.real-header h3 { font-size: 0.96rem; font-weight: 700; line-height: 1.45; }
+.real-header-meta { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
+.real-chip {
+  font-family: var(--font-mono); font-size: 0.57rem; padding: 2px 8px;
+  border-radius: 999px; border: 1px solid var(--border);
+  color: var(--text-muted); background: var(--surface2);
+}
+.real-toggle {
+  width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 0.76rem;
+  transition: all 0.28s var(--ease); flex-shrink: 0; margin-top: 2px;
+}
+.real-card.open .real-toggle {
+  transform: rotate(45deg); border-color: var(--accent); color: var(--accent);
+}
+.real-body { max-height: 0; overflow: hidden; transition: max-height 0.5s var(--ease); }
+.real-body-inner { padding: 0 26px 26px; }
+
+.real-context {
+  background: var(--surface2); border-radius: 10px; padding: 14px 18px;
+  margin-bottom: 22px; border-left: 3px solid var(--accent); margin-top: 6px;
+}
+.real-context-label {
+  font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--accent); margin-bottom: 7px;
+}
+.real-context p { font-size: 0.84rem; color: var(--text-muted); line-height: 1.65; }
+.real-context p strong { color: var(--text); font-weight: 600; }
+
+.real-points-title {
+  font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--text-faint); margin-bottom: 14px;
+}
+.real-point {
+  display: flex; gap: 14px; margin-bottom: 14px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.real-point:last-of-type { border-bottom: none; margin-bottom: 0; }
+.real-point-label {
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent);
+  font-weight: 700; min-width: 168px; padding-top: 1px; line-height: 1.4; flex-shrink: 0;
+}
+.real-point p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+.real-point p strong { color: var(--text); font-weight: 600; }
+
+.real-results { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+.real-result-chip {
+  background: rgba(0,201,122,0.07); border: 1px solid rgba(0,201,122,0.2);
+  border-radius: 8px; padding: 7px 13px; font-size: 0.78rem; color: var(--text);
+  display: flex; align-items: center; gap: 7px;
+}
+.real-result-chip i { color: var(--accent); font-size: 0.7rem; }
+
+.real-tools { margin: 16px 0; }
+.real-tools-label {
+  font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--text-faint); margin-bottom: 8px;
+}
+.real-tools-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+.real-tool-tag {
+  font-family: var(--font-mono); font-size: 0.62rem; padding: 3px 9px;
+  border-radius: 999px; background: rgba(0,144,255,0.07);
+  border: 1px solid rgba(0,144,255,0.18); color: var(--accent2);
+}
+
+.real-dl-zone { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.real-dl-label {
+  font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--text-faint); margin-bottom: 10px;
+}
+.real-dl-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn-dl {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 0.64rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-muted); border: 1px solid var(--border);
+  padding: 7px 14px; border-radius: 999px; text-decoration: none;
+  transition: all 0.2s; background: var(--surface2);
+}
+.btn-dl:hover {
+  border-color: var(--accent); color: var(--accent); background: rgba(0,201,122,0.06);
+  transform: translateY(-1px);
+}
+
+/* ══ VEILLE ══ */
+.veille-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 12px; }
+.news-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column;
+  opacity: 0; transform: translateY(8px); transition: all 0.28s var(--ease);
+  border-left: 3px solid transparent; box-shadow: var(--shadow);
+}
+.news-card.visible { opacity: 1; transform: translateY(0); }
+.news-card:hover { border-left-color: var(--accent); transform: translateY(-2px); }
+.news-card-top { padding: 14px 16px 10px; flex: 1; }
+.news-severity {
+  font-family: var(--font-mono); font-size: 0.57rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 2px 8px; border-radius: 999px; margin-bottom: 8px; display: inline-block;
+}
+.sev-critical { background: rgba(255,77,109,0.1);  color: #ff4d6d; border: 1px solid rgba(255,77,109,0.22); }
+.sev-high     { background: rgba(255,155,48,0.1);  color: #ff9b30; border: 1px solid rgba(255,155,48,0.22); }
+.sev-medium   { background: rgba(0,201,122,0.09);  color: var(--accent); border: 1px solid rgba(0,201,122,0.22); }
+.sev-info     { background: rgba(0,144,255,0.09);  color: var(--accent2); border: 1px solid rgba(0,144,255,0.2); }
+.news-title { font-size: 0.82rem; font-weight: 600; line-height: 1.5; color: var(--text); margin-bottom: 6px; }
+.news-desc  { font-size: 0.74rem; color: var(--text-muted); line-height: 1.55; }
+.news-card-foot {
+  padding: 8px 16px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface2);
+}
+.news-source {
+  font-family: var(--font-mono); font-size: 0.59rem;
+  color: var(--text-faint); display: flex; align-items: center; gap: 5px;
+}
+.news-link {
+  font-family: var(--font-mono); font-size: 0.59rem; color: var(--accent);
+  text-decoration: none; display: flex; align-items: center; gap: 4px; transition: opacity 0.2s;
+}
+.news-link:hover { opacity: 0.7; }
+.veille-sources {
+  margin-top: 36px; padding: 22px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow);
+}
+.veille-sources h3 {
+  font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--accent); margin-bottom: 14px;
+}
+.veille-sources ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.veille-sources a {
+  font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-muted);
+  text-decoration: none; border: 1px solid var(--border); padding: 5px 13px;
+  border-radius: 999px; transition: all 0.18s; background: var(--surface2);
+}
+.veille-sources a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── ENGAGEMENTS ── */
+.eng-container { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.eng-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 24px; position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(14px); transition: all 0.4s var(--ease);
+  box-shadow: var(--shadow);
+}
+.eng-card.visible { opacity: 1; transform: translateY(0); }
+.eng-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transform: scaleX(0); transform-origin: left; transition: transform 0.35s var(--ease);
+}
+.eng-card:hover::after { transform: scaleX(1); }
+.eng-card:hover { border-color: rgba(0,201,122,0.2); }
+.eng-card h4 { font-size: 0.87rem; font-weight: 700; margin-bottom: 6px; }
+.eng-card .exp-date { margin-bottom: 9px; }
+.eng-card p { font-size: 0.81rem; color: var(--text-muted); line-height: 1.6; }
+.eng-card p strong { color: var(--text); font-weight: 600; }
+
+/* ── CONTACT ── */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.contact-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 22px;
+  display: flex; align-items: center; gap: 16px;
+  text-decoration: none; color: var(--text); transition: all 0.25s var(--ease);
+  opacity: 0; transform: translateY(14px); box-shadow: var(--shadow);
+}
+.contact-item.visible { opacity: 1; transform: translateY(0); }
+.contact-item:hover {
+  border-color: rgba(0,201,122,0.35); box-shadow: var(--shadow), var(--glow);
+  transform: translateY(-2px);
+}
+.contact-icon {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(0,201,122,0.1), rgba(0,144,255,0.08));
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: var(--accent);
+}
+.contact-label {
+  font-family: var(--font-mono); font-size: 0.61rem; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--text-faint); margin-bottom: 3px;
+}
+.contact-value { font-size: 0.9rem; font-weight: 600; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hero-grid, .exp-grid, .skills-grid,
+  .eng-container, .contact-grid { grid-template-columns: 1fr; }
+  .stat-row { flex-direction: column; }
+  .stat { border-right: none; border-bottom: 1px solid var(--border); }
+  .stat:last-child { border-bottom: none; }
+  .real-point { flex-direction: column; gap: 4px; }
+  .real-point-label { min-width: unset; }
+}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="logo">
+    <div class="logo-mark"><i class="fas fa-shield-halved"></i></div>
+    SM<span>./</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="show('accueil')"     data-section="accueil"     class="active-nav">Accueil</a></li>
+    <li><a href="#" onclick="show('parcours')"    data-section="parcours">Parcours</a></li>
+    <li><a href="#" onclick="show('competences')" data-section="competences">Compétences</a></li>
+    <li><a href="#" onclick="show('realisations')"data-section="realisations">Réalisations</a></li>
+    <li><a href="#" onclick="show('veille')"      data-section="veille">Veille</a></li>
+    <li><a href="#" onclick="show('engagements')" data-section="engagements">Engagements</a></li>
+    <li><a href="#" onclick="show('contact')"     data-section="contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()" title="Changer le thème">
+      <i class="fas fa-moon icon-moon"></i>
+      <i class="fas fa-sun  icon-sun"></i>
+    </button>
+    <a href="Sanda Mompole Marcel.pdf" class="btn-cv" download>
+      <i class="fas fa-download"></i> CV
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ══ ACCUEIL ══ -->
+<section id="accueil" class="section active">
+  <div class="hero">
+    <p class="hero-eyebrow">Portfolio 2026</p>
+    <h1>Marcel <span class="highlight">Sanda</span><br>Mompole</h1>
+    <p class="hero-sub">
+      Étudiant en dernière année <strong>BTS SIO option SISR</strong> —
+      <span>Cybersécurité & Réseaux</span> — Annecy
+    </p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num" data-target="5">0</div><div class="stat-label">Audits sécurité</div></div>
+      <div class="stat"><div class="stat-num" data-target="300">0</div><div class="stat-label">Incidents résolus</div></div>
+      <div class="stat"><div class="stat-num" data-target="150">0</div><div class="stat-label">Utilisateurs sensibilisés</div></div>
+      <div class="stat"><div class="stat-num" data-target="20">0</div><div class="stat-label">Risques priorisés</div></div>
+    </div>
+
+    <div class="hero-grid">
+      <div class="hero-card">
+        <div class="hero-card-icon"><i class="fas fa-user-astronaut"></i></div>
+        <h3>Qui suis-je ?</h3>
+        <p>Étudiant en <strong>BTS SIO SISR</strong> au Lycée Saint-Michel d'Annecy. Trois stages chez <strong>FDJ</strong> en support IT et cybersécurité. Engagé dans les programmes Télémaque et Ingé+.</p>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-icon"><i class="fas fa-shield-halved"></i></div>
+        <h3>Expériences clés</h3>
+        <p><strong>Stagiaire Cyber FDJ (2026)</strong> : audits sécurité, rapports RSSI, Yugosha.<br><strong>Support N1/N2 FDJ (2024)</strong> : 300+ incidents O365, parc 500 postes.<br><strong>Amorino</strong> : service sous pression, formation juniors.</p>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-icon"><i class="fas fa-rocket"></i></div>
+        <h3>Objectifs 2026</h3>
+        <p>Intégrer <strong>Polytech, ESIEE, EPITA ou EFREI</strong> en alternance cybersécurité, idéalement chez FDJ. Cibles : SIEM, pentest avancé, cloud sécurisé AWS/GCP.</p>
+      </div>
+    </div>
+
+    <div class="tags">
+      <span>#CyberSecurity</span><span>#FDJ</span><span>#BTS_SIO_SISR</span>
+      <span>#ISO27001</span><span>#OWASP</span><span>#ActiveDirectory</span>
+      <span>#PowerBI</span><span>#Linux</span><span>#Python</span>
+      <span>#Télémaque</span><span>#Ingé+</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PARCOURS ══ -->
+<section id="parcours" class="section">
+  <div class="section-title"><h2>// 01 · Parcours Académique</h2></div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">2024 → 2026</div>
+      <h3>BTS SIO option SISR — Lycée Saint-Michel, Annecy</h3>
+      <p>Réseaux, systèmes Windows / Linux, virtualisation, sécurité des SI, supervision.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2024</div>
+      <h3>Prépa TSI — Lycée Monge, Chambéry</h3>
+      <p>Technologie et Sciences Industrielles.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2023</div>
+      <h3>Bac Pro Systèmes Numériques — Lycée Newton, Clichy</h3>
+      <p>Installation / maintenance IT, web (HTML/CSS/PHP). Président MDL & CVL.</p>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:52px"><h2>// 02 · Expériences Professionnelles</h2></div>
+  <div class="exp-grid">
+    <div class="exp-card">
+      <div class="exp-badge">FDJ — Boulogne-Billancourt</div>
+      <h4>Stagiaire Cybersécurité</h4>
+      <p class="exp-date"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>Janvier – Mars 2026</p>
+      <ul>
+        <li>Participation aux <strong>audits de sécurité</strong> et suivi des plans de remédiation RSSI.</li>
+        <li>Rédaction de rapports techniques via Yugosha, <strong>20+ risques priorisés</strong>.</li>
+        <li>Sensibilisation <strong>150+ collaborateurs</strong> phishing & Microsoft 365.</li>
+        <li>Montée en compétence conformité ISO 27001 et priorisation des risques.</li>
+      </ul>
+    </div>
+    <div class="exp-card">
+      <div class="exp-badge">FDJ — Boulogne-Billancourt</div>
+      <h4>Stagiaire Cybersécurité</h4>
+      <p class="exp-date"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>Mai – Juin 2025</p>
+      <ul>
+        <li>Exposition opérationnelle cybersécurité : détection, traitement et suivi de vulnérabilités.</li>
+        <li>Analyse applicative et web selon <strong>OWASP Top 10</strong>.</li>
+        <li>Renforcement en lecture d'architecture et communication technique.</li>
+      </ul>
+    </div>
+    <div class="exp-card">
+      <div class="exp-badge">FDJ — Boulogne-Billancourt</div>
+      <h4>Stagiaire Support Informatique N1/N2</h4>
+      <p class="exp-date"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>Janvier – Mai 2024</p>
+      <ul>
+        <li>Prise en charge support N1/N2 : <strong>300+ incidents</strong> Office 365 résolus.</li>
+        <li>Maintenance parc <strong>500 postes</strong>, diagnostics Wireshark/CMD.</li>
+        <li>Migration SharePoint, patching, respect SLA 4h.</li>
+      </ul>
+    </div>
+    <div class="exp-card">
+      <div class="exp-badge">Amorino — Lyon / Paris / Genève / Chamonix</div>
+      <h4>Employé saisonnier</h4>
+      <p class="exp-date"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>2023 – 2026</p>
+      <ul>
+        <li>Gestion caisse et service dans un environnement à forte affluence.</li>
+        <li>Formation de juniors, transmission des bonnes pratiques opérationnelles.</li>
+        <li>Développement de la communication, adaptabilité et esprit d'équipe.</li>
+      </ul>
+    </div>
+    <div class="exp-card">
+      <div class="exp-badge">Le Chichi — Vieille Ville d'Annecy</div>
+      <h4>Employé polyvalent / Vente</h4>
+      <p class="exp-date"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>Emploi étudiant</p>
+      <ul>
+        <li>Gestion relation client en parallèle des études.</li>
+        <li>Renforcement de la polyvalence et gestion des priorités.</li>
+      </ul>
+    </div>
+    <div class="exp-card">
+      <div class="exp-badge">Programme Become — Paris</div>
+      <h4>Engagement bénévole</h4>
+      <p class="exp-date"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>2021</p>
+      <ul>
+        <li>Actions solidaires développant l'ouverture, l'engagement et le travail collectif.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMPÉTENCES ══ -->
+<section id="competences" class="section">
+  <div class="section-title"><h2>// 03 · Compétences Techniques</h2></div>
+  <div class="skills-grid">
+    <div class="skill-cat">
+      <div class="skill-icon"><i class="fas fa-shield-halved"></i></div>
+      <h4>Réseaux & Cybersécurité</h4>
+      <div class="skill-tag-wrap">
+        <span class="skill-tag">VLAN</span><span class="skill-tag">Routage</span><span class="skill-tag">NAT/PAT</span>
+        <span class="skill-tag">Segmentation LAN/DMZ</span><span class="skill-tag">VPN IPsec</span><span class="skill-tag">OSPF</span>
+        <span class="skill-tag">pfSense</span><span class="skill-tag">IDS/IPS</span><span class="skill-tag">Suricata</span>
+        <span class="skill-tag">Nmap</span><span class="skill-tag">Metasploit</span><span class="skill-tag">Burp Suite</span>
+        <span class="skill-tag">OWASP Top 10</span><span class="skill-tag">Hardening</span>
+        <span class="skill-tag">ISO 27001</span><span class="skill-tag">RGPD</span>
+      </div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-icon"><i class="fas fa-server"></i></div>
+      <h4>Systèmes, Administration & Virtualisation</h4>
+      <div class="skill-tag-wrap">
+        <span class="skill-tag">Windows Server</span><span class="skill-tag">Active Directory</span><span class="skill-tag">GPO</span>
+        <span class="skill-tag">Office 365</span><span class="skill-tag">Debian/Ubuntu</span><span class="skill-tag">Bash</span>
+        <span class="skill-tag">PowerShell</span><span class="skill-tag">Proxmox</span><span class="skill-tag">VMware</span>
+        <span class="skill-tag">Docker</span><span class="skill-tag">GLPI</span><span class="skill-tag">OCS Inventory</span>
+        <span class="skill-tag">Zabbix</span><span class="skill-tag">Veeam</span><span class="skill-tag">Support N1/N2</span>
+      </div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-icon"><i class="fas fa-code"></i></div>
+      <h4>Développement & Outils Techniques</h4>
+      <div class="skill-tag-wrap">
+        <span class="skill-tag">Python</span><span class="skill-tag">HTML/CSS</span><span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">SQL</span><span class="skill-tag">Git</span><span class="skill-tag">Postman</span>
+        <span class="skill-tag">Wireshark</span><span class="skill-tag">Cisco Packet Tracer</span>
+        <span class="skill-tag">ELK Stack</span><span class="skill-tag">YOLOv8</span><span class="skill-tag">AWS/GCP (bases)</span>
+      </div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-icon"><i class="fas fa-chart-line"></i></div>
+      <h4>Outils Collaboratifs & Analyse</h4>
+      <div class="skill-tag-wrap">
+        <span class="skill-tag">PowerBI</span><span class="skill-tag">SharePoint</span><span class="skill-tag">Reporting</span>
+        <span class="skill-tag">Tableaux de bord</span><span class="skill-tag">Suivi d'indicateurs</span>
+        <span class="skill-tag">Documentation technique</span><span class="skill-tag">Synthèse RSSI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RÉALISATIONS ══ -->
+<section id="realisations" class="section">
+  <div class="section-title"><h2>// 04 · Réalisations</h2></div>
+
+  <!-- R1 -->
+  <div class="real-card" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">01 / FRONT-END · WEB</div>
+        <h3>Site vitrine — Exposition "L'Olympisme, 32 jours avec Pierre de Coubertin"</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">HTML5 / CSS3</span><span class="real-chip">JavaScript</span>
+          <span class="real-chip">RGPD</span><span class="real-chip">Responsive Design</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Contexte & Objectif</div>
+        <p>Concevoir un site web <strong>Single Page</strong> informatif et interactif pour une exposition temporaire au <strong>Palais Lumière d'Évian</strong>. Le site doit valoriser l'histoire olympique, respecter les contraintes RGPD et offrir une expérience multilingue.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-code" style="margin-right:5px"></i>Détails techniques</div>
+      <div class="real-point"><div class="real-point-label">Développement Front-end</div><p>Structuration sémantique <strong>HTML5</strong>, CSS3 pur sans framework. Flexbox pour la galerie, <strong>Media Queries</strong> pour le responsive mobile/tablette.</p></div>
+      <div class="real-point"><div class="real-point-label">Interactivité JavaScript</div><p><strong>Algorithme Fisher-Yates Shuffle</strong> pour afficher 10 œuvres aléatoires parmi 24 à chaque chargement, renforçant l'engagement utilisateur.</p></div>
+      <div class="real-point"><div class="real-point-label">Module RGPD</div><p>Module cookies JS bloquant dynamiquement les éléments tiers (Google Maps, images hébergées) en cas de refus, conformément au RGPD.</p></div>
+      <div class="real-point"><div class="real-point-label">Contenu multilingue</div><p>Section "Note du commissaire" avec <strong>traduction juxtaposée en anglais</strong>, sans recours à la traduction automatique.</p></div>
+      <div class="real-point"><div class="real-point-label">Intégration API</div><p>Iframe <strong>Google Maps</strong> pour le plan d'accès interactif. Rédaction d'une biographie de Coubertin et d'une critique documentaire.</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">HTML5</span><span class="real-tool-tag">CSS3</span><span class="real-tool-tag">JavaScript ES6</span><span class="real-tool-tag">Google Maps API</span><span class="real-tool-tag">Flexbox</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Site responsive validé</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Conformité RGPD</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>24 œuvres intégrées</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-folder-open" style="margin-right:5px"></i>Documents téléchargeables</div>
+        <div class="real-dl-row">
+          <a href="fichiers/fiche_technique_olympisme.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> Fiche technique</a>
+          <a href="fichiers/index.html" class="btn-dl" download><i class="fas fa-code"></i> Code source</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- R2 -->
+  <div class="real-card" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">02 / INFRA · SYSTÈME</div>
+        <h3>Infrastructure système & support utilisateur — Musée du Palais Lumière</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">Windows Server</span><span class="real-chip">Active Directory</span><span class="real-chip">GLPI</span><span class="real-chip">ITIL</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Contexte & Objectif</div>
+        <p>Créer un <strong>environnement réseau sécurisé et centralisé</strong> pour les collaborateurs du musée (4 services), avec Helpdesk GLPI intégré pour la gestion des incidents.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-code" style="margin-right:5px"></i>Détails techniques</div>
+      <div class="real-point"><div class="real-point-label">Active Directory</div><p>Contrôleur de domaine AD (musee.local), gestion utilisateurs/groupes par service, <strong>profils itinérants</strong> permettant la mobilité sur tous les postes.</p></div>
+      <div class="real-point"><div class="real-point-label">Gestion GPO</div><p>Lecteurs réseau mappés automatiquement via <strong>GPO par service</strong>. Restrictions postes visiteurs : masquage lecteur C:, blocage panneau de config, lancement auto du site web musée.</p></div>
+      <div class="real-point"><div class="real-point-label">Helpdesk GLPI</div><p>Serveur <strong>GLPI</strong> sur Ubuntu/Apache/MariaDB/PHP, catégories ITIL (Réseau, Poste utilisateur, Billetterie), traçabilité complète.</p></div>
+      <div class="real-point"><div class="real-point-label">Validation PV recette</div><p>Cahier de tests complet vérifiant la conformité des accès par service, remontée tickets GLPI et restrictions postes visiteurs.</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">Windows Server 2022</span><span class="real-tool-tag">Active Directory</span><span class="real-tool-tag">GPO</span><span class="real-tool-tag">GLPI</span><span class="real-tool-tag">Ubuntu</span><span class="real-tool-tag">MariaDB</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Domaine AD opérationnel</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>4 groupes ITIL configurés</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>PV de recette validé</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-folder-open" style="margin-right:5px"></i>Documents téléchargeables</div>
+        <div class="real-dl-row">
+          <a href="fichiers/fiche_technique_musee.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> Fiche technique</a>
+          <a href="fichiers/pv_recette_musee.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> PV de recette</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- R3 -->
+  <div class="real-card" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">03 / RÉSEAU · SÉCURITÉ</div>
+        <h3>Architecture réseau hybride & VPN IPsec — EcoMobil (Lyon ↔ Bron)</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">VPN IPsec</span><span class="real-chip">VLAN</span><span class="real-chip">AD/DNS/DHCP</span><span class="real-chip">Wi-Fi Entreprise</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Contexte & Objectif</div>
+        <p>Interconnecter les deux sites d'une <strong>association de mobilité durable</strong> (Lyon et Bron) : conception de l'architecture complète, sécurisation VPN, déploiement infra et Wi-Fi entreprise.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-code" style="margin-right:5px"></i>Détails techniques</div>
+      <div class="real-point"><div class="real-point-label">Architecture hybride</div><p><strong>Schémas logiques et physiques</strong> : routeurs Cisco, commutateurs administrables, serveurs. Segmentation VLAN par usage (collaborateurs, visiteurs, serveurs).</p></div>
+      <div class="real-point"><div class="real-point-label">Tunnel VPN IPsec</div><p><strong>IPsec site-à-site IKEv2, AES-256</strong> entre les deux routeurs frontaliers. Chiffrement intégral de tous les flux inter-sites.</p></div>
+      <div class="real-point"><div class="real-point-label">Services infrastructure</div><p>Serveurs <strong>AD, DNS, DHCP</strong> centralisés. Serveurs Web EcoMobil avec règles d'accès différenciées entre sites.</p></div>
+      <div class="real-point"><div class="real-point-label">Mobilité Wi-Fi</div><p>SSID séparés : collaborateurs (<strong>WPA2-Enterprise / RADIUS</strong>) et visiteurs (portail captif isolé).</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">Cisco Packet Tracer</span><span class="real-tool-tag">VPN IPsec/IKEv2</span><span class="real-tool-tag">VLAN 802.1Q</span><span class="real-tool-tag">RADIUS</span><span class="real-tool-tag">Draw.io</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>2 sites interconnectés sécurisés</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>VPN AES-256 opérationnel</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>PV de recette validé</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-folder-open" style="margin-right:5px"></i>Documents téléchargeables</div>
+        <div class="real-dl-row">
+          <a href="fichiers/fiche_technique_ecomobil.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> Fiche technique</a>
+          <a href="fichiers/schema_reseau_ecomobil.pdf" class="btn-dl" download><i class="fas fa-sitemap"></i> Schéma réseau</a>
+          <a href="fichiers/pv_recette_ecomobil.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> PV de recette</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- R4 Audit FDJ -->
+  <div class="real-card" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">04 / AUDIT · FDJ</div>
+        <h3>Audits de sécurité & conformité ISO 27001 — FDJ, Boulogne</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">Yugosha</span><span class="real-chip">CVSS</span><span class="real-chip">PowerBI</span><span class="real-chip">SharePoint</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Contexte & Objectif</div>
+        <p>Participer activement aux <strong>audits de sécurité de la FDJ</strong> en lien avec les équipes cybersécurité et gouvernance, et contribuer au suivi de la conformité ISO 27001 via des rapports et dashboards RSSI.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-code" style="margin-right:5px"></i>Détails techniques</div>
+      <div class="real-point"><div class="real-point-label">Conduite d'audits</div><p>Participation à <strong>5 audits de sécurité</strong> complets : identification des vulnérabilités, priorisation via matrice <strong>CVSS</strong>, rédaction de 10+ plans de remédiation pour le RSSI.</p></div>
+      <div class="real-point"><div class="real-point-label">Plateforme Yugosha</div><p>Utilisation de <strong>Yugosha</strong> pour signaler, suivre et documenter les failles détectées. Gestion du cycle de vie complet de chaque vulnérabilité jusqu'à correction.</p></div>
+      <div class="real-point"><div class="real-point-label">Reporting & conformité</div><p>Rédaction de <strong>15+ rapports techniques</strong> et synthèses SharePoint/PowerBI accélérant le suivi de conformité <strong>ISO 27001 de 30%</strong>. Dashboards visuels pour le comité RSSI.</p></div>
+      <div class="real-point"><div class="real-point-label">Communication métiers</div><p>Restitution des constats techniques à des équipes non-techniques, vulgarisation des risques cyber et recommandations priorisées.</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">Yugosha</span><span class="real-tool-tag">PowerBI</span><span class="real-tool-tag">SharePoint</span><span class="real-tool-tag">CVSS</span><span class="real-tool-tag">ISO 27001</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>15+ rapports produits</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>20+ risques priorisés</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Dashboards RSSI déployés</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-folder-open" style="margin-right:5px"></i>Documents téléchargeables</div>
+        <div class="real-dl-row">
+          <a href="fichiers/fiche_technique_audit_fdj.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> Fiche technique</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- R5 Sensibilisation Phishing -->
+  <div class="real-card" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">05 / SÉCURITÉ · HUMAINE</div>
+        <h3>Campagne sensibilisation phishing & bonnes pratiques — FDJ</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">Microsoft 365</span><span class="real-chip">Phishing</span><span class="real-chip">Awareness</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Contexte & Objectif</div>
+        <p>Concevoir et déployer une <strong>campagne de sensibilisation cybersécurité</strong> auprès des collaborateurs FDJ, avec focus sur la reconnaissance phishing et les bonnes pratiques Microsoft 365.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-code" style="margin-right:5px"></i>Détails techniques</div>
+      <div class="real-point"><div class="real-point-label">Support pédagogique</div><p>Création de <strong>présentations PowerPoint interactives</strong> (quiz, cas pratiques) couvrant phishing, spear-phishing, malwares et erreurs humaines courantes.</p></div>
+      <div class="real-point"><div class="real-point-label">Simulation phishing</div><p>Participation à des <strong>simulations de phishing</strong> pour évaluer la réactivité des utilisateurs et mesurer l'impact de la formation avant/après.</p></div>
+      <div class="real-point"><div class="real-point-label">Bonnes pratiques M365</div><p>Focus <strong>Microsoft 365 Defender</strong> : gestion MFA, vérification expéditeurs, signalement spam, partage sécurisé OneDrive/Teams.</p></div>
+      <div class="real-point"><div class="real-point-label">Déploiement & résultats</div><p>Sessions auprès de <strong>150+ collaborateurs</strong>, questionnaires avant/après. Incidents phishing signalés en baisse de <strong>25%</strong>.</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">PowerPoint</span><span class="real-tool-tag">Microsoft 365</span><span class="real-tool-tag">Teams</span><span class="real-tool-tag">Phishing Simulator</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>150+ utilisateurs formés</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Incidents phishing ↓25%</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Quiz interactifs déployés</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-folder-open" style="margin-right:5px"></i>Documents téléchargeables</div>
+        <div class="real-dl-row">
+          <a href="fichiers/fiche_technique_sensibilisation.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> Fiche technique</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- R6 IA -->
+  <div class="real-card" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">06 / IA · DEEP LEARNING</div>
+        <h3>Système de reconnaissance d'images par Intelligence Artificielle (YOLOv8)</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">Python</span><span class="real-chip">YOLOv8</span><span class="real-chip">Flask</span><span class="real-chip">Transfer Learning</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Contexte & Objectif</div>
+        <p>Développer un système de <strong>reconnaissance d'images par IA</strong> capable de détecter et classifier des éléments spécifiques pour automatiser une tâche d'analyse visuelle. Du dataset à l'application web déployée.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-code" style="margin-right:5px"></i>Détails techniques</div>
+      <div class="real-point"><div class="real-point-label">Deep Learning YOLOv8</div><p>Algorithme <strong>YOLOv8 (Ultralytics)</strong> pour la détection temps réel. Configuration hyperparamètres (epochs, batch size, learning rate) optimisée pour le dataset personnalisé.</p></div>
+      <div class="real-point"><div class="real-point-label">Transfer Learning</div><p>Modèle <strong>pré-entraîné yolov8n.pt</strong> adapté au dataset spécifique. Temps d'entraînement réduit, ressources GPU optimisées.</p></div>
+      <div class="real-point"><div class="real-point-label">Scripts automatisation</div><p>Scripts Python <strong>train.py / script.py</strong> : prétraitement, augmentation de données (rotations, flips, luminosité), logging métriques (mAP, précision, recall).</p></div>
+      <div class="real-point"><div class="real-point-label">Déploiement Flask</div><p>Application web <strong>Flask/Streamlit</strong> pour charger le meilleur modèle (best.pt) et tester la détection temps réel sur flux vidéo ou images, avec affichage des bounding boxes.</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">Python</span><span class="real-tool-tag">YOLOv8</span><span class="real-tool-tag">PyTorch</span><span class="real-tool-tag">Flask</span><span class="real-tool-tag">OpenCV</span><span class="real-tool-tag">NumPy</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Modèle entraîné & déployé</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Détection temps réel</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Application web fonctionnelle</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-folder-open" style="margin-right:5px"></i>Documents téléchargeables</div>
+        <div class="real-dl-row">
+          <a href="fichiers/fiche_technique_ia.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> Fiche technique</a>
+          <a href="fichiers/index.html" class="btn-dl" download><i class="fas fa-code"></i> Code HTML</a>
+          <a href="fichiers/script.js" class="btn-dl" download><i class="fab fa-js"></i> Script JS</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- R7 CTF -->
+  <div class="real-card" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">07 / CTF · CYBERSÉCURITÉ</div>
+        <h3>PasseTonHack 2025 & 2026 — Compétition CTF (Capture The Flag)</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">Pentest</span><span class="real-chip">Cryptographie</span><span class="real-chip">Forensics</span><span class="real-chip">Web Exploitation</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Contexte & Objectif</div>
+        <p>Participer à la compétition <strong>PasseTonHack</strong> (2025 & 2026) : défis techniques en sécurité informatique, cryptographie, exploitation web et investigation numérique dans un environnement compétitif.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-code" style="margin-right:5px"></i>Détails techniques</div>
+      <div class="real-point"><div class="real-point-label">Exploitation web</div><p>Identification de failles : <strong>SQLi, XSS, IDOR</strong>, directory traversal. Utilisation de <strong>Burp Suite</strong> pour intercepter et manipuler les requêtes HTTP.</p></div>
+      <div class="real-point"><div class="real-point-label">Cryptographie</div><p>Cassage de hashs (MD5, SHA1), déchiffrement (Base64, ROT13, XOR), analyse de protocoles mal configurés (padding oracle, ECB mode).</p></div>
+      <div class="real-point"><div class="real-point-label">Forensics numérique</div><p>Captures réseau <strong>Wireshark</strong>, stéganographie, extraction de métadonnées, analyse de logs et dumps mémoire avec <strong>Volatility 3</strong>.</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">Burp Suite</span><span class="real-tool-tag">Wireshark</span><span class="real-tool-tag">Python</span><span class="real-tool-tag">John the Ripper</span><span class="real-tool-tag">CyberChef</span><span class="real-tool-tag">Ghidra</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>2 éditions (2025 & 2026)</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Multiples challenges résolus</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Travail en équipe renforcé</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-folder-open" style="margin-right:5px"></i>Documents téléchargeables</div>
+        <div class="real-dl-row">
+          <a href="fichiers/fiche_technique_ctf.pdf" class="btn-dl" download><i class="fas fa-file-pdf"></i> Fiche technique</a>
+          <a href="fichiers/writeup_ctf_2025.pdf" class="btn-dl" download><i class="fas fa-scroll"></i> Write-up 2025</a>
+          <a href="fichiers/writeup_ctf_2026.pdf" class="btn-dl" download><i class="fas fa-scroll"></i> Write-up 2026</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══ VEILLE ══ -->
+<section id="veille" class="section">
+  <div class="section-title"><h2>// 05 · Veille Technologique & Cyber</h2></div>
+  <div id="news-container" class="veille-grid"></div>
+  <div class="veille-sources">
+    <h3><i class="fas fa-satellite-dish" style="margin-right:7px"></i>Mes sources de veille</h3>
+    <ul>
+      <li><a href="https://www.cert.ssi.gouv.fr/" target="_blank">CERT-FR / ANSSI</a></li>
+      <li><a href="https://www.zataz.com/" target="_blank">Zataz</a></li>
+      <li><a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10</a></li>
+      <li><a href="https://www.cybermalveillance.gouv.fr/" target="_blank">Cybermalveillance.gouv.fr</a></li>
+      <li><a href="https://nvd.nist.gov/" target="_blank">NVD / NIST</a></li>
+      <li><a href="https://thehackernews.com/" target="_blank">The Hacker News</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ ENGAGEMENTS ══ -->
+<section id="engagements" class="section">
+  <div class="section-title"><h2>// 06 · Engagements & Mentorat</h2></div>
+  <div class="eng-container">
+    <div class="eng-card">
+      <h4><i class="fas fa-flask" style="color:var(--accent);margin-right:7px"></i>Programme Ingé+</h4>
+      <p class="exp-date">2025 – 2026</p>
+      <p>Préparation aux concours d'écoles d'ingénieurs via Ingé+ (Lycée Saint-Michel). Modules scientifiques renforcés et découverte métiers ingénieur cybersécurité / réseaux. Cible : <strong>Polytech, ESIEE, ESIEA, EPITA, EFREI</strong>.</p>
+    </div>
+    <div class="eng-card">
+      <h4><i class="fas fa-handshake" style="color:var(--accent2);margin-right:7px"></i>Filleul Télémaque</h4>
+      <p class="exp-date">2020 – 2025</p>
+      <p>Sélectionné comme <strong>filleul Télémaque</strong> pendant 5 ans. Accompagnement personnalisé par un mentor entreprise, rencontres trimestrielles, actions citoyennes. Parcours validé avec mention en 2025.</p>
+    </div>
+    <div class="eng-card">
+      <h4><i class="fas fa-star" style="color:var(--accent3);margin-right:7px"></i>Président MDL / CVL</h4>
+      <p class="exp-date">Bac Pro – Lycée Newton, Clichy</p>
+      <p>Élu <strong>Président MDL & CVL</strong>. Organisation d'événements, gestion budget €2000/an, représentation des élèves. Développement leadership, médiation et gestion d'équipe.</p>
+    </div>
+    <div class="eng-card">
+      <h4><i class="fas fa-heart" style="color:var(--accent);margin-right:7px"></i>Programme BECOME</h4>
+      <p class="exp-date">2021 – Paris</p>
+      <p>Participation au programme <strong>BECOME</strong> d'actions solidaires et d'engagement citoyen. Projets en équipe développant l'esprit d'initiative et la solidarité.</p>
+    </div>
+    <div class="eng-card">
+      <h4><i class="fas fa-users" style="color:var(--accent2);margin-right:7px"></i>Challenges & CTF</h4>
+      <p class="exp-date">2025 – 2026</p>
+      <p>Participation au challenge <strong>PasseTonHack</strong> (2025 & 2026) organisé par le lycée et en open. Compétition en équipe sur pentest, crypto, forensics et reverse engineering.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact" class="section">
+  <div class="section-title"><h2>// 07 · Contact</h2></div>
+  <div class="contact-grid">
+    <a href="mailto:marcele.monpole@gmail.com" class="contact-item">
+      <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+      <div><div class="contact-label">Email</div><div class="contact-value">contact@sandamompole.fr</div></div>
+    </a>
+    <a href="tel:+33605699532" class="contact-item">
+      <div class="contact-icon"><i class="fas fa-phone"></i></div>
+      <div><div class="contact-label">Téléphone</div><div class="contact-value">06 05 69 95 32</div></div>
+    </a>
+    <a href="https://www.linkedin.com/in/marcel-sanda-mompole-684726248/" target="_blank" class="contact-item">
+      <div class="contact-icon"><i class="fab fa-linkedin-in"></i></div>
+      <div><div class="contact-label">LinkedIn</div><div class="contact-value">@sanda-mompole</div></div>
+    </a>
+    <a href="https://github.com/sandamompole" target="_blank" class="contact-item">
+      <div class="contact-icon"><i class="fab fa-github"></i></div>
+      <div><div class="contact-label">GitHub</div><div class="contact-value">@sandamompole</div></div>
+    </a>
+    <div class="contact-item" style="cursor:default">
+      <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+      <div>
+        <div class="contact-label">Régions</div>
+        <div class="contact-value"><strong>Auvergne-Rhône-Alpes</strong> (Annecy/Lyon) · <strong>Île-de-France</strong> (Paris)</div>
+      </div>
+    </div>
+    <a href="Sanda Mompole Marcel.pdf" class="contact-item" download>
+      <div class="contact-icon"><i class="fas fa-file-pdf"></i></div>
+      <div><div class="contact-label">Mon CV</div><div class="contact-value">Télécharger PDF</div></div>
+    </a>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<script>
+/* ── CURSOR ── */
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function loop(){cur.style.left=mx-5+'px';cur.style.top=my-5+'px';rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx-17+'px';ring.style.top=ry-17+'px';requestAnimationFrame(loop);})();
+
+/* ── THEME ── */
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('portfolio-theme',next);
+}
+(()=>{const t=localStorage.getItem('portfolio-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+
+/* ── CANVAS NETWORK ── */
+(()=>{
+  const canvas=document.getElementById('bg-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,nodes=[];
+  const resize=()=>{W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;};
+  window.addEventListener('resize',resize);resize();
+  class Node{
+    constructor(){this.reset();}
+    reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.4+.5;}
+    update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;}
+  }
+  for(let i=0;i<75;i++)nodes.push(new Node());
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>n.update());
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.hypot(dx,dy);
+      if(d<115){
+        const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+        ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.strokeStyle=isDark?`rgba(0,201,122,${.14*(1-d/115)})`:`rgba(0,109,232,${.12*(1-d/115)})`;
+        ctx.lineWidth=.55;ctx.stroke();
+      }
+    }
+    nodes.forEach(n=>{
+      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=isDark?'rgba(0,201,122,0.55)':'rgba(0,109,232,0.35)';ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ── NAV ── */
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active-nav'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`[data-section="${id}"]`)?.classList.add('active-nav');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(revealAll,60);
+  if(id==='accueil')animateCounters();
+  if(id==='veille')buildNews();
+  return false;
+}
+
+/* ── REVEAL ── */
+function revealAll(){
+  document.querySelectorAll('.timeline-item,.exp-card,.skill-cat,.real-card,.eng-card,.contact-item,.news-card').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('visible'),i*48);
+  });
+}
+
+/* ── COUNTERS ── */
+function animateCounters(){
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=+el.dataset.target;let c=0;
+    const step=target/40;
+    const t=setInterval(()=>{c+=step;if(c>=target){c=target;clearInterval(t);}el.textContent=Math.floor(c)+(target>9?'+':'');},28);
+  });
+}
+
+/* ── ACCORDION ── */
+function toggleReal(card){
+  const body=card.querySelector('.real-body');
+  const isOpen=card.classList.contains('open');
+  document.querySelectorAll('.real-card.open').forEach(c=>{c.classList.remove('open');c.querySelector('.real-body').style.maxHeight='0';});
+  if(!isOpen){card.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
+}
+
+/* ── VEILLE ── */
+const newsData=[
+  {severity:'critical',title:'Vulnérabilité critique routeurs Cisco',desc:'CVE-2025-XXXX (CVSS 9.8) : RCE sans authentification sur IOS XE. Patch urgent disponible.',source:'CERT-FR',url:'https://www.cert.ssi.gouv.fr/'},
+  {severity:'high',title:'Phishing massif Microsoft Office 365',desc:'Campagne de pages M365 falsifiées pour voler des identifiants d\'entreprise à grande échelle.',source:'Zataz',url:'https://www.zataz.com/'},
+  {severity:'info',title:'ISO 27001 — Gestion des risques Cloud',desc:'La révision 2022 intègre des contrôles spécifiques aux environnements Cloud hybrides et multi-fournisseurs.',source:'ANSSI',url:'https://www.ssi.gouv.fr/'},
+  {severity:'critical',title:'Zero-Day Windows Server exploité',desc:'Faille dans le spooler d\'impression permettant une élévation de privilèges SYSTEM. Aucun patch disponible.',source:'NVD/NIST',url:'https://nvd.nist.gov/'},
+  {severity:'high',title:'Nouveaux modules ransomware LockBit',desc:'Le CERT-FR alerte sur une variante ciblant les établissements hospitaliers et collectivités françaises.',source:'CERT-FR',url:'https://www.cert.ssi.gouv.fr/'},
+  {severity:'info',title:'IA & SIEM : ELK Stack & détection comportementale',desc:'Intégration de modèles ML dans ELK Stack pour la détection d\'anomalies réseau en temps réel.',source:'The Hacker News',url:'https://thehackernews.com/'},
+  {severity:'medium',title:'Sécurité conteneurs Docker — OWASP 2025',desc:'Nouvelles recommandations OWASP pour la sécurisation des images Docker et pipelines CI/CD.',source:'OWASP',url:'https://owasp.org/'},
+  {severity:'medium',title:'Hardening Linux — Guide ANSSI 2025',desc:'Configuration minimale recommandée pour les serveurs Linux exposés et les systèmes critiques.',source:'ANSSI',url:'https://www.ssi.gouv.fr/'},
+  {severity:'info',title:'Directive NIS2 — Transposition France',desc:'Nouvelles obligations pour entités essentielles et importantes : délai de notification à 24h.',source:'Cybermalveillance',url:'https://www.cybermalveillance.gouv.fr/'},
+  {severity:'medium',title:'Proxmox VE — Vulnérabilités isolation VM',desc:'Isolation insuffisante entre VMs. Mise à jour Proxmox VE 8.2.x recommandée en urgence.',source:'The Hacker News',url:'https://thehackernews.com/'},
+  {severity:'high',title:'DDoS amplifiés — Pics à 3,8 Tbps',desc:'Nouvelles attaques DDoS par réflexion DNS/NTP atteignant des records mondiaux.',source:'Zataz',url:'https://www.zataz.com/'},
+  {severity:'medium',title:'Forensics — Analyse dump mémoire Emotet',desc:'Retour d\'expérience analyse d\'un dump Windows infecté via Volatility 3 et YARA rules.',source:'CERT-FR',url:'https://www.cert.ssi.gouv.fr/'},
+  {severity:'info',title:'SecNumCloud — Hébergement souverain France',desc:'Mise à jour du référentiel ANSSI pour la qualification des hébergeurs cloud souverains (v3.2).',source:'ANSSI',url:'https://www.ssi.gouv.fr/'},
+  {severity:'high',title:'Cybersécurité industrielle SCADA/ICS',desc:'Augmentation des cyberattaques sur automates industriels. Segmentation OT/IT urgente recommandée.',source:'CERT-FR',url:'https://www.cert.ssi.gouv.fr/'},
+  {severity:'high',title:'MFA contourné — Attaques AiTM',desc:'Les attaques Adversary-in-The-Middle contournent le MFA classique. Passage au MFA résistant au phishing requis.',source:'The Hacker News',url:'https://thehackernews.com/'}
+];
+const sevLabel={critical:'Critique',high:'Élevé',medium:'Modéré',info:'Info'};
+
+function buildNews(){
+  const container=document.getElementById('news-container');
+  if(container.children.length)return;
+  newsData.forEach((item,i)=>{
+    const card=document.createElement('div');
+    card.className='news-card';
+    card.innerHTML=`
+      <div class="news-card-top">
+        <div class="news-severity sev-${item.severity}">${sevLabel[item.severity]}</div>
+        <div class="news-title">${item.title}</div>
+        <div class="news-desc">${item.desc}</div>
+      </div>
+      <div class="news-card-foot">
+        <span class="news-source"><i class="fas fa-rss"></i> ${item.source}</span>
+        <a href="${item.url}" target="_blank" class="news-link">Source <i class="fas fa-arrow-up-right-from-square"></i></a>
+      </div>`;
+    container.appendChild(card);
+    setTimeout(()=>card.classList.add('visible'),i*48);
+  });
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',()=>{revealAll();animateCounters();});
+</script>
+</body>
+</html>

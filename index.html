@@ -20,16 +20,20 @@
     <div class="logo-mark"><i class="fas fa-shield-halved"></i></div>
     SM<span>./</span>
   </div>
-  <ul class="nav-links">
-    <li><a href="#" onclick="show('accueil')"     data-section="accueil"     class="active-nav">Accueil</a></li>
-    <li><a href="#" onclick="show('parcours')"    data-section="parcours">Parcours</a></li>
-    <li><a href="#" onclick="show('competences')" data-section="competences">Compétences</a></li>
-    <li><a href="#" onclick="show('realisations')"data-section="realisations">Réalisations</a></li>
-    <li><a href="#" onclick="show('veille')"      data-section="veille">Veille</a></li>
-    <li><a href="#" onclick="show('engagements')" data-section="engagements">Engagements</a></li>
-    <li><a href="#" onclick="show('contact')"     data-section="contact">Contact</a></li>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="show('accueil');closeMobile()"     data-section="accueil"     class="active-nav">Accueil</a></li>
+    <li><a href="#" onclick="show('parcours');closeMobile()"    data-section="parcours">Parcours</a></li>
+    <li><a href="#" onclick="show('competences');closeMobile()" data-section="competences">Compétences</a></li>
+    <li><a href="#" onclick="show('realisations');closeMobile()"data-section="realisations">Réalisations</a></li>
+    <li><a href="#" onclick="show('veille');closeMobile()"      data-section="veille">Veille</a></li>
+    <li><a href="#" onclick="show('certificats');closeMobile()" data-section="certificats">Certificats</a></li>
+    <li><a href="#" onclick="show('engagements');closeMobile()" data-section="engagements">Engagements</a></li>
+    <li><a href="#" onclick="show('contact');closeMobile()"     data-section="contact">Contact</a></li>
   </ul>
   <div class="nav-right">
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <button class="theme-btn" onclick="toggleTheme()" title="Changer le thème">
       <i class="fas fa-moon icon-moon"></i>
       <i class="fas fa-sun  icon-sun"></i>
@@ -39,6 +43,20 @@
     </a>
   </div>
 </nav>
+<!-- Mobile drawer -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <ul>
+    <li><a href="#" onclick="show('accueil');closeMobile()"     data-section="accueil">Accueil</a></li>
+    <li><a href="#" onclick="show('parcours');closeMobile()"    data-section="parcours">Parcours</a></li>
+    <li><a href="#" onclick="show('competences');closeMobile()" data-section="competences">Compétences</a></li>
+    <li><a href="#" onclick="show('realisations');closeMobile()"data-section="realisations">Réalisations</a></li>
+    <li><a href="#" onclick="show('veille');closeMobile()"      data-section="veille">Veille</a></li>
+    <li><a href="#" onclick="show('certificats');closeMobile()" data-section="certificats">Certificats</a></li>
+    <li><a href="#" onclick="show('engagements');closeMobile()" data-section="engagements">Engagements</a></li>
+    <li><a href="#" onclick="show('contact');closeMobile()"     data-section="contact">Contact</a></li>
+  </ul>
+</div>
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobile()"></div>
 
 <div class="container">
 
@@ -527,6 +545,184 @@
   </div>
 </section>
 
+<!-- ══ CERTIFICATS ══ -->
+<section id="certificats" class="section">
+  <div class="section-title"><h2>// 08 · Certifications & Badges</h2></div>
+
+  <div class="cert-filters">
+    <button class="cert-filter active" onclick="filterCerts('all',this)">Tous <span class="cert-filter-count">24</span></button>
+    <button class="cert-filter" onclick="filterCerts('certificat',this)">Certificats <span class="cert-filter-count">9</span></button>
+    <button class="cert-filter" onclick="filterCerts('badge',this)">Badges <span class="cert-filter-count">3</span></button>
+    <button class="cert-filter" onclick="filterCerts('reussite',this)">Réussites <span class="cert-filter-count">12</span></button>
+  </div>
+
+  <div class="cert-grid" id="certGrid">
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Défense du réseau</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 10 déc. 2025</div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Sécurité des systèmes d'exploitation et des terminaux</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 26 nov. 2025</div>
+    </div>
+    <div class="cert-card" data-type="badge">
+      <div class="cert-type cert-type-badge"><i class="fas fa-award"></i> Badge</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Notions de base sur les réseaux</div>
+      <div class="cert-category">Cours complet</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 13 avr. 2025</div>
+      <div class="cert-actions"><a href="certificats/notions_reseaux_badge.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="certificat">
+      <div class="cert-type cert-type-certificat"><i class="fas fa-certificate"></i> Certificat</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Notions de base sur les réseaux</div>
+      <div class="cert-category">Cours complet</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 13 avr. 2025</div>
+      <div class="cert-actions"><a href="certificats/notions_reseaux_cert.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Principes de base de l'accès au réseau</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 13 avr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Notions de base sur les réseaux</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 01 avr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Introduction to Ethical Hacking and Penetration Testing</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 18 mars 2025</div>
+    </div>
+    <div class="cert-card" data-type="badge">
+      <div class="cert-type cert-type-badge"><i class="fas fa-award"></i> Badge</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Introduction to Packet Tracer</div>
+      <div class="cert-category">Examen</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 23 févr. 2025</div>
+      <div class="cert-actions"><a href="certificats/packet_tracer_badge.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="certificat">
+      <div class="cert-type cert-type-certificat"><i class="fas fa-certificate"></i> Certificat</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Introduction to Packet Tracer</div>
+      <div class="cert-category">Examen</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 23 févr. 2025</div>
+      <div class="cert-actions"><a href="certificats/packet_tracer_cert.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Exploring IoT with Cisco Packet Tracer</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 23 févr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="certificat">
+      <div class="cert-type cert-type-certificat"><i class="fas fa-certificate"></i> Certificat</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Exploring IoT with Cisco Packet Tracer</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 23 févr. 2025</div>
+      <div class="cert-actions"><a href="certificats/iot_cert.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Exploración de Redes con Cisco Packet Tracer</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 21 févr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="certificat">
+      <div class="cert-type cert-type-certificat"><i class="fas fa-certificate"></i> Certificat</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Exploración de Redes con Cisco Packet Tracer</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 21 févr. 2025</div>
+      <div class="cert-actions"><a href="certificats/exploracion_cert.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Premiers pas avec Cisco Packet Tracer</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 21 févr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="certificat">
+      <div class="cert-type cert-type-certificat"><i class="fas fa-certificate"></i> Certificat</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Premiers pas avec Cisco Packet Tracer</div>
+      <div class="cert-category">Module</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 21 févr. 2025</div>
+      <div class="cert-actions"><a href="certificats/premiers_pas_pt_cert.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="badge">
+      <div class="cert-type cert-type-badge"><i class="fas fa-award"></i> Badge</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Fundamentos do Python 1</div>
+      <div class="cert-category">Cours complet</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 11 févr. 2025</div>
+      <div class="cert-actions"><a href="certificats/python1_badge.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="certificat">
+      <div class="cert-type cert-type-certificat"><i class="fas fa-certificate"></i> Certificat</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Fundamentos do Python 1</div>
+      <div class="cert-category">Cours complet</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 11 févr. 2025</div>
+      <div class="cert-actions"><a href="certificats/python1_cert.pdf" class="cert-btn" download><i class="fas fa-download"></i> PDF</a></div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Coleções, funções e exceções</div>
+      <div class="cert-category">Module Python</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 11 févr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Fluxo de controle e listas</div>
+      <div class="cert-category">Module Python</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 11 févr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Tipos de dados, variáveis e E/S básica</div>
+      <div class="cert-category">Module Python</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 11 févr. 2025</div>
+    </div>
+    <div class="cert-card" data-type="reussite">
+      <div class="cert-type cert-type-reussite"><i class="fas fa-check-circle"></i> Réussite</div>
+      <div class="cert-platform"><i class="fas fa-network-wired"></i> Cisco NetAcad</div>
+      <div class="cert-title">Introdução a Python e Programação</div>
+      <div class="cert-category">Module Python</div>
+      <div class="cert-date"><i class="fas fa-calendar-check"></i> 09 déc. 2024</div>
+    </div>
+  </div>
+
+  <div class="cert-stats">
+    <div class="cert-stat-item"><span class="cert-stat-num">9</span><span class="cert-stat-label">Certificats</span></div>
+    <div class="cert-stat-item"><span class="cert-stat-num">3</span><span class="cert-stat-label">Badges</span></div>
+    <div class="cert-stat-item"><span class="cert-stat-num">12</span><span class="cert-stat-label">Modules validés</span></div>
+    <div class="cert-stat-item"><span class="cert-stat-num">Cisco</span><span class="cert-stat-label">Plateforme principale</span></div>
+  </div>
+</section>
+
 <!-- ══ VEILLE ══ -->
 <section id="veille" class="section">
   <div class="section-title"><h2>// 05 · Veille Technologique & Cyber</h2></div>
@@ -580,9 +776,9 @@
 <section id="contact" class="section">
   <div class="section-title"><h2>// 07 · Contact</h2></div>
   <div class="contact-grid">
-    <a href="mailto:marcele.monpole@gmail.com" class="contact-item">
+    <a href="/cdn-cgi/l/email-protection#0c616d7e6f696069226163627c6360694c6b616d6560226f6361" class="contact-item">
       <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-      <div><div class="contact-label">Email</div><div class="contact-value">contact@sandamompole.fr</div></div>
+      <div><div class="contact-label">Email</div><div class="contact-value"><span class="__cf_email__" data-cfemail="55363a3b213436211526343b3134383a38253a39307b3327">[email&#160;protected]</span></div></div>
     </a>
     <a href="tel:+33605699532" class="contact-item">
       <div class="contact-icon"><i class="fas fa-phone"></i></div>
@@ -612,12 +808,29 @@
 
 </div><!-- /container -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── CURSOR ── */
 const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
 (function loop(){cur.style.left=mx-5+'px';cur.style.top=my-5+'px';rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx-17+'px';ring.style.top=ry-17+'px';requestAnimationFrame(loop);})();
+
+/* ── MOBILE MENU ── */
+function toggleMobile(){
+  const d=document.getElementById('mobileDrawer');
+  const o=document.getElementById('mobileOverlay');
+  const h=document.getElementById('hamburger');
+  const open=d.classList.toggle('open');
+  o.classList.toggle('open',open);
+  h.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function closeMobile(){
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow='';
+}
 
 /* ── THEME ── */
 function toggleTheme(){
@@ -677,8 +890,8 @@ function show(id){
 
 /* ── REVEAL ── */
 function revealAll(){
-  document.querySelectorAll('.timeline-item,.exp-card,.skill-cat,.real-card,.eng-card,.contact-item,.news-card').forEach((el,i)=>{
-    setTimeout(()=>el.classList.add('visible'),i*48);
+  document.querySelectorAll('.timeline-item,.exp-card,.skill-cat,.real-card,.eng-card,.contact-item,.news-card,.cert-card').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('visible'),i*40);
   });
 }
 
@@ -740,8 +953,23 @@ function buildNews(){
   });
 }
 
+/* ── CERTIFICATS FILTER ── */
+function filterCerts(type, btn){
+  document.querySelectorAll('.cert-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cert-card').forEach((card,i)=>{
+    const show = type==='all' || card.dataset.type===type;
+    card.style.display = show ? '' : 'none';
+    if(show) setTimeout(()=>card.classList.add('visible'), i*40);
+    else card.classList.remove('visible');
+  });
+}
+
 /* ── INIT ── */
-document.addEventListener('DOMContentLoaded',()=>{revealAll();animateCounters();});
+document.addEventListener('DOMContentLoaded',()=>{
+  revealAll();
+  animateCounters();
+});
 </script>
 </body>
 </html>

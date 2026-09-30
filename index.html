@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marcel Sanda MOMPOLE | Cybersécurité & Réseaux</title>
+<title>Marcel Sanda Mompole | Applications de gestion pour commerces</title>
+<meta name="description" content="Développeur indépendant : applications de gestion sur mesure pour commerces (caisse, traçabilité, températures, inventaires), maintenance, formation et accompagnement numérique. Créateur de Pilot-Shop.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -22,6 +23,7 @@
   </div>
   <ul class="nav-links" id="navLinks">
     <li><a href="#" onclick="show('accueil');closeMobile()"     data-section="accueil"     class="active-nav">Accueil</a></li>
+    <li><a href="#" onclick="show('offre');closeMobile()"       data-section="offre">Offre</a></li>
     <li><a href="#" onclick="show('parcours');closeMobile()"    data-section="parcours">Parcours</a></li>
     <li><a href="#" onclick="show('competences');closeMobile()" data-section="competences">Compétences</a></li>
     <li><a href="#" onclick="show('realisations');closeMobile()"data-section="realisations">Réalisations</a></li>
@@ -47,6 +49,7 @@
 <div class="mobile-drawer" id="mobileDrawer">
   <ul>
     <li><a href="#" onclick="show('accueil');closeMobile()"     data-section="accueil">Accueil</a></li>
+    <li><a href="#" onclick="show('offre');closeMobile()"       data-section="offre">Offre</a></li>
     <li><a href="#" onclick="show('parcours');closeMobile()"    data-section="parcours">Parcours</a></li>
     <li><a href="#" onclick="show('competences');closeMobile()" data-section="competences">Compétences</a></li>
     <li><a href="#" onclick="show('realisations');closeMobile()"data-section="realisations">Réalisations</a></li>
@@ -63,44 +66,93 @@
 <!-- ══ ACCUEIL ══ -->
 <section id="accueil" class="section active">
   <div class="hero">
-    <p class="hero-eyebrow">Portfolio 2026</p>
+    <p class="hero-eyebrow">Entrepreneur individuel · Applications de gestion</p>
     <h1>Marcel <span class="highlight">Sanda</span><br>Mompole</h1>
     <p class="hero-sub">
-      Étudiant en dernière année <strong>BTS SIO option SISR</strong> —
-      <span>Cybersécurité & Réseaux</span> — Annecy
+      Je conçois des <strong>applications de gestion sur mesure pour les commerces</strong> :
+      caisse, traçabilité, relevés de températures, inventaires, pointage.
+      <span>Simples, utilisables hors connexion, pensées pour le terrain.</span>
     </p>
 
+    <div class="hero-cta">
+      <a href="#" class="btn-primary" onclick="return show('contact')"><i class="fas fa-paper-plane"></i> Parler de mon commerce</a>
+      <a href="#" class="btn-ghost" onclick="openPilotShop();return false"><i class="fas fa-store"></i> Voir Pilot-Shop</a>
+    </div>
+
     <div class="stat-row">
-      <div class="stat"><div class="stat-num" data-target="5">0</div><div class="stat-label">Audits sécurité</div></div>
-      <div class="stat"><div class="stat-num" data-target="300">0</div><div class="stat-label">Incidents résolus</div></div>
-      <div class="stat"><div class="stat-num" data-target="150">0</div><div class="stat-label">Utilisateurs sensibilisés</div></div>
-      <div class="stat"><div class="stat-num" data-target="20">0</div><div class="stat-label">Risques priorisés</div></div>
+      <div class="stat"><div class="stat-num" data-target="1">0</div><div class="stat-label">Boutique équipée en production</div></div>
+      <div class="stat"><div class="stat-num" data-target="7">0</div><div class="stat-label">Modules métier</div></div>
+      <div class="stat"><div class="stat-num" data-target="300">0</div><div class="stat-label">Incidents IT résolus</div></div>
+      <div class="stat"><div class="stat-num" data-target="150">0</div><div class="stat-label">Utilisateurs formés</div></div>
     </div>
 
     <div class="hero-grid">
       <div class="hero-card">
-        <div class="hero-card-icon"><i class="fas fa-user-astronaut"></i></div>
-        <h3>Qui suis-je ?</h3>
-        <p>Étudiant en <strong>BTS SIO SISR</strong> au Lycée Saint-Michel d'Annecy. Trois stages chez <strong>FDJ</strong> en support IT et cybersécurité. Engagé dans les programmes Télémaque et Ingé+.</p>
+        <div class="hero-card-icon"><i class="fas fa-store"></i></div>
+        <h3>Pour qui ?</h3>
+        <p>Boutiques, glaciers, boulangeries, cafés, restaurants et commerces de proximité qui veulent <strong>remplacer le papier et les tableurs</strong> par un outil adapté à leur façon de travailler.</p>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-icon"><i class="fas fa-mobile-screen-button"></i></div>
+        <h3>Déjà sur le terrain</h3>
+        <p><strong>Pilot-Shop</strong> tourne chaque jour dans une boutique Amorino à Chamonix : caisse, DLC, frigos, OCR des étiquettes, pointage, inventaires. J'y ai aussi travaillé en saison, je connais le rythme d'un comptoir.</p>
       </div>
       <div class="hero-card">
         <div class="hero-card-icon"><i class="fas fa-shield-halved"></i></div>
-        <h3>Expériences clés</h3>
-        <p><strong>Stagiaire Cyber FDJ (2026)</strong> : audits sécurité, rapports RSSI, Yugosha.<br><strong>Support N1/N2 FDJ (2024)</strong> : 300+ incidents O365, parc 500 postes.<br><strong>Amorino</strong> : service sous pression, formation juniors.</p>
-      </div>
-      <div class="hero-card">
-        <div class="hero-card-icon"><i class="fas fa-rocket"></i></div>
-        <h3>Objectifs 2026</h3>
-        <p>Intégrer <strong>Polytech, ESIEE, EPITA ou EFREI</strong> en alternance cybersécurité, idéalement chez FDJ. Cibles : SIEM, pentest avancé, cloud sécurisé AWS/GCP.</p>
+        <h3>Un profil technique solide</h3>
+        <p>Formé en <strong>réseaux et cybersécurité</strong> (BTS SIO SISR, stages FDJ) : vos données sont sauvegardées, protégées, et vos équipes sont formées aux bons réflexes.</p>
       </div>
     </div>
 
     <div class="tags">
-      <span>#CyberSecurity</span><span>#FDJ</span><span>#BTS_SIO_SISR</span>
-      <span>#ISO27001</span><span>#OWASP</span><span>#ActiveDirectory</span>
-      <span>#PowerBI</span><span>#Linux</span><span>#Python</span>
-      <span>#Télémaque</span><span>#Ingé+</span>
+      <span>#Commerce</span><span>#PWA</span><span>#HorsLigne</span>
+      <span>#Traçabilité</span><span>#HACCP</span><span>#Caisse</span>
+      <span>#Supabase</span><span>#JavaScript</span><span>#Cybersécurité</span>
+      <span>#Formation</span><span>#Maintenance</span>
     </div>
+  </div>
+</section>
+
+<!-- ══ OFFRE ══ -->
+<section id="offre" class="section">
+  <div class="section-title"><h2>// Offre · Pour les commerces</h2></div>
+  <div class="offer-grid">
+    <div class="offer-card">
+      <div class="skill-icon"><i class="fas fa-cash-register"></i></div>
+      <h4>Application de gestion sur mesure</h4>
+      <p>Un outil qui colle à votre boutique : caisse, traçabilité et DLC, relevés de températures, inventaires, pointage des équipes. Fonctionne sur tablette, téléphone ou ordinateur, <strong>même sans connexion</strong>.</p>
+    </div>
+    <div class="offer-card">
+      <div class="skill-icon"><i class="fas fa-screwdriver-wrench"></i></div>
+      <h4>Maintenance & évolutions</h4>
+      <p>Hébergement, sauvegardes, corrections et nouvelles fonctionnalités au fil de la saison. <strong>Un interlocuteur unique</strong> qui connaît votre application.</p>
+    </div>
+    <div class="offer-card">
+      <div class="skill-icon"><i class="fas fa-chalkboard-user"></i></div>
+      <h4>Formation des équipes</h4>
+      <p>Prise en main de l'outil par vos vendeurs et responsables, sur place ou à distance, avec des supports simples. Sensibilisation aux arnaques (phishing, faux fournisseurs).</p>
+    </div>
+    <div class="offer-card">
+      <div class="skill-icon"><i class="fas fa-laptop-code"></i></div>
+      <h4>Accompagnement numérique</h4>
+      <p>Choix du matériel, mise en place du Wi-Fi et des comptes, sécurisation des postes, conseils pour passer du papier au numérique <strong>sans perturber le service</strong>.</p>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:52px"><h2>// Comment ça se passe</h2></div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h4>On échange</h4><p>Un appel ou un passage en boutique pour comprendre vos besoins et vos contraintes.</p></div>
+    <div class="step"><div class="step-num">2</div><h4>Je vous propose</h4><p>Une proposition claire : fonctionnalités, délai et prix, sans jargon.</p></div>
+    <div class="step"><div class="step-num">3</div><h4>Je livre et je forme</h4><p>Installation sur vos appareils, formation de l'équipe, ajustements après les premiers jours.</p></div>
+    <div class="step"><div class="step-num">4</div><h4>Je reste disponible</h4><p>Maintenance et évolutions pour que l'outil suive votre activité.</p></div>
+  </div>
+
+  <div class="cta-band">
+    <div>
+      <h3>Vous avez un commerce et trop de papier ?</h3>
+      <p>Premier échange gratuit et sans engagement.</p>
+    </div>
+    <a href="#" class="btn-primary" onclick="return show('contact')"><i class="fas fa-paper-plane"></i> Me contacter</a>
   </div>
 </section>
 
@@ -240,6 +292,49 @@
 <!-- ══ RÉALISATIONS ══ -->
 <section id="realisations" class="section">
   <div class="section-title"><h2>// 04 · Réalisations</h2></div>
+
+  <!-- R0 Pilot-Shop -->
+  <div class="real-card real-card-featured" id="pilotShopCard" onclick="toggleReal(this)">
+    <div class="real-header">
+      <div class="real-header-left">
+        <div class="real-num">★ PROJET PHARE · EN PRODUCTION</div>
+        <h3>Pilot-Shop — Application de gestion pour une boutique Amorino (Chamonix)</h3>
+        <div class="real-header-meta">
+          <span class="real-chip">PWA</span><span class="real-chip">JavaScript</span><span class="real-chip">Hors ligne</span><span class="real-chip">Supabase</span><span class="real-chip">OCR</span>
+        </div>
+      </div>
+      <div class="real-toggle"><i class="fas fa-plus"></i></div>
+    </div>
+    <div class="real-body"><div class="real-body-inner">
+      <div class="real-context">
+        <div class="real-context-label"><i class="fas fa-flag" style="margin-right:5px"></i>Le besoin</div>
+        <p>Une boutique à forte affluence en station gérait ses registres sur papier : traçabilité des produits, températures des frigos, présence des équipes. Objectif : <strong>tout centraliser dans une application simple</strong>, utilisable par des saisonniers dès le premier jour, et qui fonctionne <strong>même quand le réseau tombe</strong>.</p>
+      </div>
+      <div class="real-points-title"><i class="fas fa-list-check" style="margin-right:5px"></i>Ce que fait l'application</div>
+      <div class="real-point"><div class="real-point-label">Caisse</div><p>Suivi des ventes et de la caisse du point de vente.</p></div>
+      <div class="real-point"><div class="real-point-label">Traçabilité & DLC</div><p>Enregistrement des produits et de leurs dates limites, avec <strong>lecture des étiquettes par OCR</strong> depuis l'appareil photo pour éviter la saisie manuelle.</p></div>
+      <div class="real-point"><div class="real-point-label">Températures</div><p>Relevés des frigos et vitrines, historique consultable en cas de contrôle.</p></div>
+      <div class="real-point"><div class="real-point-label">Équipe & stock</div><p><strong>Pointage</strong> des employés et <strong>inventaires</strong> guidés.</p></div>
+      <div class="real-point"><div class="real-point-label">Hors ligne</div><p>Application installable (PWA) : les données sont stockées sur l'appareil (IndexedDB) puis <strong>synchronisées automatiquement</strong> avec la base Supabase au retour du réseau.</p></div>
+      <div class="real-tools">
+        <div class="real-tools-label"><i class="fas fa-wrench" style="margin-right:5px"></i>Technologies</div>
+        <div class="real-tools-wrap">
+          <span class="real-tool-tag">HTML / CSS / JavaScript</span><span class="real-tool-tag">PWA · Service Worker</span><span class="real-tool-tag">IndexedDB</span><span class="real-tool-tag">Supabase (REST)</span><span class="real-tool-tag">OCR</span>
+        </div>
+      </div>
+      <div class="real-results">
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Utilisée au quotidien en boutique</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Registres papier remplacés</div>
+        <div class="real-result-chip"><i class="fas fa-check-circle"></i>Fonctionne sans réseau</div>
+      </div>
+      <div class="real-dl-zone">
+        <div class="real-dl-label"><i class="fas fa-comments" style="margin-right:5px"></i>Le même outil pour votre commerce ?</div>
+        <div class="real-dl-row">
+          <a href="#" class="btn-dl" onclick="event.stopPropagation();return show('contact')"><i class="fas fa-paper-plane"></i> Demander une démo</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
 
   <!-- R1 -->
   <div class="real-card" onclick="toggleReal(this)">
@@ -503,7 +598,7 @@
   <div class="real-card" onclick="toggleReal(this)">
   <div class="real-header">
     <div class="real-header-left">
-      <div class="real-num">03 / INFRA · DÉPLOIEMENT</div>
+      <div class="real-num">07 / INFRA · DÉPLOIEMENT</div>
       <h3>Industrialisation du poste de travail & Gestion de parc — Environnement FDJ</h3>
       <div class="real-header-meta">
         <span class="real-chip">SCCM / MECM</span>
@@ -592,7 +687,7 @@
   <div class="real-card" onclick="toggleReal(this)">
     <div class="real-header">
       <div class="real-header-left">
-        <div class="real-num">07 / CTF · CYBERSÉCURITÉ</div>
+        <div class="real-num">08 / CTF · CYBERSÉCURITÉ</div>
         <h3>PasseTonHack 2025 & 2026 — Compétition CTF (Capture The Flag)</h3>
         <div class="real-header-meta">
           <span class="real-chip">Pentest</span><span class="real-chip">Cryptographie</span><span class="real-chip">Forensics</span><span class="real-chip">Web Exploitation</span>
@@ -863,10 +958,14 @@
 <!-- ══ CONTACT ══ -->
 <section id="contact" class="section">
   <div class="section-title"><h2>// 07 · Contact</h2></div>
+  <div class="contact-intro">
+    <h3>Parlons de votre commerce</h3>
+    <p>Décrivez-moi votre activité et ce qui vous fait perdre du temps aujourd'hui. Je vous réponds sous 48 h avec une première proposition. Le premier échange est gratuit.</p>
+  </div>
   <div class="contact-grid">
-    <a href="/cdn-cgi/l/email-protection#0c616d7e6f696069226163627c6360694c6b616d6560226f6361" class="contact-item">
+    <a href="mailto:contact@sandamompole.fr?subject=Projet%20pour%20mon%20commerce" class="contact-item">
       <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-      <div><div class="contact-label">Email</div><div class="contact-value"><span class="__cf_email__" data-cfemail="55363a3b213436211526343b3134383a38253a39307b3327">[email&#160;protected]</span></div></div>
+      <div><div class="contact-label">Email</div><div class="contact-value">contact@sandamompole.fr</div></div>
     </a>
     <a href="tel:+33605699532" class="contact-item">
       <div class="contact-icon"><i class="fas fa-phone"></i></div>
@@ -883,8 +982,8 @@
     <div class="contact-item" style="cursor:default">
       <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
       <div>
-        <div class="contact-label">Régions</div>
-        <div class="contact-value"><strong>Auvergne-Rhône-Alpes</strong> (Annecy/Lyon) · <strong>Île-de-France</strong> (Paris)</div>
+        <div class="contact-label">Interventions</div>
+        <div class="contact-value"><strong>Île-de-France</strong> · <strong>Haute-Savoie</strong> (Annecy, Chamonix) · à distance partout en France</div>
       </div>
     </div>
     <a href="Sanda Mompole Marcel.pdf" class="contact-item" download>
@@ -894,9 +993,15 @@
   </div>
 </section>
 
+<footer class="site-footer">
+  <p><strong>Marcel Sanda Mompole EI</strong> · Entrepreneur individuel · Conseil, développement et maintenance d'applications de gestion</p>
+  <!-- TODO : renseigner le numéro SIRET avant publication -->
+  <p>SIRET : <span id="siret">à compléter</span> · Code APE 6202A</p>
+</footer>
+
 </div><!-- /container -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ── CURSOR ── */
 const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
 let mx=0,my=0,rx=0,ry=0;
@@ -978,7 +1083,7 @@ function show(id){
 
 /* ── REVEAL ── */
 function revealAll(){
-  document.querySelectorAll('.timeline-item,.exp-card,.skill-cat,.real-card,.eng-card,.contact-item,.news-card,.cert-card').forEach((el,i)=>{
+  document.querySelectorAll('.timeline-item,.exp-card,.skill-cat,.real-card,.eng-card,.contact-item,.offer-card,.step,.news-card,.cert-card').forEach((el,i)=>{
     setTimeout(()=>el.classList.add('visible'),i*40);
   });
 }
@@ -998,6 +1103,13 @@ function toggleReal(card){
   const isOpen=card.classList.contains('open');
   document.querySelectorAll('.real-card.open').forEach(c=>{c.classList.remove('open');c.querySelector('.real-body').style.maxHeight='0';});
   if(!isOpen){card.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
+}
+
+/* ── PILOT-SHOP ── */
+function openPilotShop(){
+  show('realisations');
+  const card=document.getElementById('pilotShopCard');
+  if(!card.classList.contains('open'))toggleReal(card);
 }
 
 /* ── VEILLE ── */

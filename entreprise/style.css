@@ -1,0 +1,136 @@
+/* Site vitrine — Marcel Sanda Mompole EI */
+:root {
+  --bg: #f7f8f6;
+  --surface: #ffffff;
+  --surface2: #eef1ec;
+  --text: #14211b;
+  --muted: #4d5d55;
+  --border: rgba(20, 33, 27, 0.12);
+  --accent: #0b7a52;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(11, 122, 82, 0.1);
+  --radius: 14px;
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c1411;
+    --surface: #121d18;
+    --surface2: #17251f;
+    --text: #e8f1ec;
+    --muted: #9fb3a8;
+    --border: rgba(232, 241, 236, 0.12);
+    --accent: #2fc48a;
+    --accent-ink: #06130d;
+    --accent-soft: rgba(47, 196, 138, 0.12);
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); }
+img { max-width: 100%; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+/* Accessibilité */
+.skip { position: absolute; left: 16px; top: -48px; z-index: 20; background: var(--accent); color: var(--accent-ink); padding: 8px 14px; border-radius: 8px; }
+.skip:focus { top: 8px; }
+a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.note { margin-top: 16px; color: var(--muted); font-size: .9rem; }
+
+/* Navigation */
+.top {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--text); text-decoration: none; }
+.brand span { color: var(--accent); }
+.top nav { display: flex; gap: 20px; }
+.top nav a { color: var(--muted); text-decoration: none; font-size: .95rem; }
+.top nav a:hover { color: var(--text); }
+@media (max-width: 720px) { .top nav .hide-sm { display: none; } }
+
+/* Boutons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: 999px; font-weight: 600; text-decoration: none;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+  transition: transform .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--accent); }
+
+/* Sections */
+section { padding: 72px 0; }
+section + section { border-top: 1px solid var(--border); }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.1rem); margin-bottom: 12px; }
+h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: 640px; margin: 16px 0 28px; }
+.eyebrow { font-size: .85rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+.intro { color: var(--muted); max-width: 640px; margin-bottom: 32px; }
+
+.hero { padding: 88px 0 72px; }
+.hero .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.trust { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 32px; color: var(--muted); font-size: .92rem; list-style: none; }
+.trust li::before { content: "✓ "; color: var(--accent); font-weight: 700; }
+
+/* Grilles et cartes */
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; display: flex; flex-direction: column; gap: 8px;
+}
+.card p { color: var(--muted); }
+.card .price { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--text); margin-top: auto; padding-top: 12px; }
+.card .price small { display: block; font-family: var(--font-body); font-size: .85rem; font-weight: 400; color: var(--muted); }
+.card.featured { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.tag { align-self: flex-start; font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+
+/* Référence */
+.case { display: grid; gap: 32px; grid-template-columns: 1.1fr 1fr; align-items: start; }
+@media (max-width: 820px) { .case { grid-template-columns: 1fr; } }
+.case ul { list-style: none; display: grid; gap: 10px; }
+.case li { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.case li strong { display: block; }
+.case li span { color: var(--muted); font-size: .93rem; }
+
+/* Étapes */
+.steps { counter-reset: s; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); list-style: none; }
+.steps li { counter-increment: s; background: var(--surface2); border-radius: var(--radius); padding: 20px; }
+.steps li::before { content: counter(s); display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-weight: 700; margin-bottom: 10px; }
+.steps p { color: var(--muted); font-size: .95rem; }
+
+/* Contact */
+.contact { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+.contact .lines { display: grid; gap: 10px; margin: 20px 0 24px; }
+.contact .lines a { font-size: 1.1rem; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+
+/* Pied de page */
+footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--muted); font-size: .88rem; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+/* Page mentions légales */
+.legal { padding: 56px 16px; max-width: 760px; }
+.legal h1 { font-size: 2rem; margin-bottom: 24px; }
+.legal h2 { font-size: 1.2rem; margin: 28px 0 8px; }
+.legal p, .legal li { color: var(--muted); }
+.legal ul { padding-left: 20px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn { transition: none; }
+}
